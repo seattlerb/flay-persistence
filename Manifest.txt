@@ -1,0 +1,8 @@
+.autotest
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+lib/flay_persistence.rb
+lib/stable_hash.rb
+test/flay/test_persistence.rb
