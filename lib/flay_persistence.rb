@@ -1,12 +1,16 @@
 require "rubygems"
 require "flay"
 
+##
+# A simple plugin that adds persistence to flay
+
 class Flay::Persistence
+  # duh
   VERSION = "1.0.0"
 end
 
-class Flay
-  def self.options_persistence op, options
+class Flay # :nodoc:
+  def self.options_persistence op, options # :nodoc:
     op.separator nil
     op.separator "Persistence options:"
     op.separator nil
@@ -29,11 +33,23 @@ class Flay
     end
   end
 
-  def merge_hash h
+  def merge_hash h # :nodoc:
     h.each do |code, ary|
       self.hashes[code].concat ary
     end
   end
+
+  ##
+  # Overrides +process+ when the -p command-line option is used. This
+  # loads up the persisted data, runs specified files individually,
+  # merges those options with the main flay dataset, and then
+  # saves the data back out.
+  #
+  # NOTE: Currently this is using Marshal because it is cheap and
+  # easy. I don't plan for it to stay that way because it will bog
+  # down. I'm hoping to get maglev sorted out so this can run on
+  # maglev and take advantage of the transparent multi-process
+  # persistence.
 
   def persist_hashes(*args)
     db_path = "flay.db"

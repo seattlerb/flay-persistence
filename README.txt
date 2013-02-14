@@ -5,19 +5,26 @@ rdoc :: http://docs.seattlerb.org/flay-persistence
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Did you ever want to make your flay results persistent?!? Me neither,
+but now you can! This flay plugin allows you to run flay across
+multiple runs combining and persisting the results. This allows you to
+detect plagiarism or good gem candidates across multiple projects.
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* Adds -p flag to persist data on a file-by-file basis.
+* Adds -r flag to re-run against already scanned files.
+* Currently uses Marshal to persist... This begs for maglev.
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  % flay -p some_project
+  % flay -p -r other_project # redo already scanned files with -r
+  % flay -p                  # just show the persisted data
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* flay 2.1+
 
 == INSTALL:
 

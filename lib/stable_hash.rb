@@ -3,9 +3,7 @@ require "rubygems"
 require "inline"
 require "sexp"
 
-class Sexp
-  # http://en.wikipedia.org/wiki/Jenkins_hash_function
-
+class Sexp # :nodoc:
   begin
     names = %w(alias and arglist args array attrasgn attrset back_ref
                begin block block_pass break call case cdecl class colon2
@@ -18,7 +16,17 @@ class Sexp
                splat str super svalue to_ary true undef until valias
                when while xstr yield zsuper)
 
+    ##
+    # All ruby_parser nodes in an index hash. Used by jenkins algorithm.
+
     NODE_NAMES = Hash[names.each_with_index.map {|n, i| [n.to_sym, i] }]
+
+    ##
+    # Calculate the jenkins hash and memoize it.
+
+    def stable_hash
+      @stable_hash ||= self._stable_hash
+    end
 
     inline :C do |b|
       raise CompilationError if ENV["PURE_RUBY"]
@@ -30,6 +38,8 @@ class Sexp
       b.prefix <<-C
         static uint32_t jenkins(VALUE sexp) {
           // http://www.burtleburtle.net/bob/hash/doobs.html
+          // http://en.wikipedia.org/wiki/Jenkins_hash_function
+
           uint32_t hash = 0;
           VALUE n;
           size_t max, i;
@@ -67,15 +77,11 @@ class Sexp
           return jenkins(self);
         }
       C
-
-      def stable_hash
-        @stable_hash ||= self._stable_hash
-      end
     end
   rescue CompilationError
-    MAX_INT32 = 2 ** 32 - 1
+    MAX_INT32 = 2 ** 32 - 1 # :nodoc:
 
-    def stable_hash
+    def _stable_hash # :nodoc: see above
       hash = 0
 
       n = NODE_NAMES.fetch first
@@ -99,43 +105,3 @@ class Sexp
     end
   end
 end
-
-
-# def hx(x):
-#     if isinstance(x, tuple):
-#         result = 0x345678L
-#         mult = 1000003
-#         for elt in x:
-#             y = hx(elt)
-#             result = (((result + y) & 0xffffffffL) * mult) &
-# 0xffffffffL
-#             mult = (mult * 69069) & 0xffffffffL
-#         result ^= len(x)
-#         if result == -1:
-#             result = -2
-#     else:
-#         result = hash(x)
-#     return result
-
-# static long
-# tuplehash(PyTupleObject *v)
-# {
-#     register long x, y;
-#     register Py_ssize_t len = Py_SIZE(v);
-#     register PyObject **p;
-#     long mult = 1000003L;
-#     x = 0x345678L;
-#     p = v->ob_item;
-#     while (--len >= 0) {
-#         y = PyObject_Hash(*p++);
-#         if (y == -1)
-#             return -1;
-#         x = (x ^ y) * mult;
-#         /* the cast might truncate len; that doesn't change hash stability */
-#         mult += (long)(82520L + len + len);
-#     }
-#     x += 97531L;
-#     if (x == -1)
-#         x = -2;
-#     return x;
-# }
