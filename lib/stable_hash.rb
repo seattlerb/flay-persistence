@@ -1,4 +1,3 @@
-$: << "../../RubyInline/dev/lib"
 require "rubygems"
 require "inline"
 require "sexp"
