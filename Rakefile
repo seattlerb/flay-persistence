@@ -4,6 +4,7 @@ require "rubygems"
 require "hoe"
 
 Hoe.add_include_dirs "../../flay/dev/lib"
+Hoe.add_include_dirs "../../ruby_parser/dev/lib"
 
 Hoe.plugin :isolate
 Hoe.plugin :seattlerb
