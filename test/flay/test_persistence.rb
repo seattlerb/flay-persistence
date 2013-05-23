@@ -4,7 +4,7 @@ require "flay"
 
 module TestFlay; end
 
-class TestFlay::TestPersistence < MiniTest::Unit::TestCase
+class TestFlay::TestPersistence < Minitest::Test
   def test_ARGH
     persist = ENV["P"]
 
