@@ -1,3 +1,9 @@
+=== 1.0.1 / 2015-05-07
+
+* 1 bug fix:
+
+  * ZOMG I left in development code!?!? So embarrassed! (phiggins)
+
 === 1.0.0 / 2013-02-13
 
 * 1 major enhancement
