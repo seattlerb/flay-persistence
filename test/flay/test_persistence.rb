@@ -45,7 +45,7 @@ class TestFlay::TestPersistence < Minitest::Test
     flay.process_sexp sexp
 
     expect = [[:call], [:hash], [:hash]]
-    actual = flay.hashes.values.map { |ss| ss.map(&:first) }
+    actual = flay.hashes.values.map { |ss| ss.map(&:sexp_type) }
 
     assert_equal expect, actual.sort_by { |a| a.first.to_s }
   end
