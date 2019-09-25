@@ -6,7 +6,7 @@ require "flay"
 
 class Flay::Persistence
   # duh
-  VERSION = "1.0.1"
+  VERSION = "1.0.2"
 end
 
 class Flay # :nodoc:
